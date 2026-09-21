@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>楠梓國小 - 法定傳染病線上通報系統</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-amber-600 text-white shadow-lg">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white p-2 rounded-full text-amber-600">
+                    <i class="fa-solid fa-notes-medical text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold">高雄市楠梓國小</h1>
+                    <p class="text-xs text-amber-100">法定傳染病線上通報網（衛生局1150311更新版）</p>
+                </div>
+            </div>
+            <!-- 切換視圖按鈕 -->
+            <button onclick="toggleView()" id="viewToggleBtn" class="bg-amber-700 hover:bg-amber-800 text-white px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-2 border border-amber-500">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span id="toggleText">前往後台儀表板</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="flex-grow max-w-4xl w-full mx-auto p-4 md:p-6">
+
+        <!-- ===== 前端通報表單區塊 ===== -->
+        <div id="formSection" class="bg-white rounded-xl shadow-md p-6 border-t-4 border-amber-500">
+            <div class="mb-6 border-b pb-4">
+                <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-amber-300">全民開放版</span>
+                <h2 class="text-xl font-bold mt-2 text-slate-800">學生法定傳染病通報表單（黃單數位版）</h2>
+                <p class="text-slate-500 text-sm mt-1">請填寫學生傳染病資訊，送出後將同步通知健康中心與班級導師。</p>
+            </div>
+
+            <form id="reportForm" onsubmit="handleSubmit(event)" class="space-y-6">
+                
+                <!-- 1. 基本資料 -->
+                <div class="bg-amber-50/50 p-4 rounded-lg border border-amber-100">
+                    <h3 class="text-base font-semibold text-amber-900 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-user-graduate"></i> 1. 學生基本資料
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">通報日期</label>
+                            <input type="date" id="reportDate" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">班級</label>
+                            <!-- 已改為自行輸入框 -->
+                            <input type="text" id="class" placeholder="例如: 一年一班" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">座號</label>
+                            <!-- 自行輸入座號 -->
+                            <input type="text" id="seatNo" placeholder="例如: 12" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">學生姓名</label>
+                            <input type="text" id="studentName" placeholder="姓名" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 症狀 / 診斷勾選 -->
+                <div>
+                    <h3 class="text-base font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-stethoscope text-amber-600"></i> 2. 症狀 / 診斷項目 (可複選)
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="發燒" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">發燒</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="嘔吐" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">嘔吐</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="腹瀉" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">腹瀉</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="腸病毒" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm font-medium text-red-600">腸病毒</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="A型流感 (+)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">A型流感 (+)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="B型流感 (+)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">B型流感 (+)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="新冠 (+)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">新冠 (+)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="水痘" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">水痘</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="登革熱" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">登革熱</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                            <input type="checkbox" name="disease" value="肺結核" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                            <span class="text-sm">肺結核</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. 詳細就醫紀錄 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">1. 發病日</label>
+                        <input type="date" id="onsetDate" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">2. 確診日</label>
+                        <input type="date" id="diagnosisDate" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">3. 就醫診所/醫院</label>
+                        <input type="text" id="hospital" placeholder="例如：楠梓聯合診所" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">4. 請假起始日</label>
+                        <input type="date" id="leaveStartDate" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- 4. 安親班與處置方式 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">5. 安親班名稱</label>
+                        <input type="text" id="cramSchool" placeholder="若無請填『無』" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">6. 處置方式</label>
